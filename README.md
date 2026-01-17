@@ -1,70 +1,69 @@
-# Monte Carlo Option Pricing with C++ & CUDA 🚀
 
-A high-performance Monte Carlo simulation framework for pricing financial derivatives using **C++17** and **CUDA**. This project supports multiple option types and provides both **CPU and GPU implementations** for benchmarking and performance comparison.
+# CUDA-Based Monte Carlo Option Pricing
 
----
+High-performance Monte Carlo simulation framework in C++ and CUDA for pricing **European, Asian, American, and Basket options**. Benchmarks CPU vs GPU implementations.
 
-## 📌 Features
+## Features
 
-### Supported Option Types
-- European Options (Call / Put)
-- Asian Options (Arithmetic Average)
-- American Options (Early Exercise – CPU only)
-- Basket Options (Multiple Assets)
-
-### Technical Highlights
+- European Call/Put
+- Asian (Arithmetic Average)  
+- American (Early Exercise - CPU only)
+- Basket (Multiple Assets)
 - CPU & GPU (CUDA) implementations
-- Template-based payoff abstraction (`CallPayoff`, `PutPayoff`)
-- Fixed-seed RNG for reproducible simulations
-- RAII-based benchmarking timer
-- Command-line interface using **cxxopts**
-- Modular architecture with clean host/device separation
+- Template-based payoff abstraction
+- CLI support (`cxxopts`)
+- RAII Timer for benchmarking
+- Fixed-seed RNG for reproducibility
 
----
+## Prerequisites
 
-## 📁 Project Structure
+- C++17 compiler
+- NVIDIA GPU + CUDA Toolkit
+- CMake or Make
+- `cxxopts` (included)
+
+## Project Structure
+
+```
+.
 ├── include/
-│ ├── benchmark.hpp
-│ ├── european.cuh
-│ ├── asian.cuh
-│ ├── basket.cuh
-│ └── american.cuh
+│   ├── benchmark.hpp
+│   ├── european.cuh
+│   ├── asian.cuh
+│   ├── basket.cuh
+│   └── american.cuh
 ├── src/
-│ ├── main.cu
-│ ├── european.cu
-│ ├── asian.cu
-│ ├── basket.cu
-│ └── american.cu
+│   ├── main.cu
+│   ├── european.cu
+│   ├── asian.cu
+│   ├── basket.cu
+│   └── american.cu
 ├── benchmarking/
-│ ├── european.cu
-│ ├── asian.cu
-│ ├── basket.cu
-│ └── american.cu
-├── third_party/
-│ └── cxxopts/
-│ └── cxxopts.hpp
+│   └── *.cu
+├── third_party/cxxopts/
 ├── Results.ipynb
 └── README.md
+```
 
-
----
-
-## 🛠 Prerequisites
-
-- C++17 compatible compiler
-- NVIDIA GPU with CUDA support
-- CUDA Toolkit installed
-- `nvcc` compiler
-- cxxopts library (included)
-
----
-
-## ⚙️ Build Instructions
-
-Compile using `nvcc`:
+## Build
 
 ```bash
-nvcc -std=c++17 -arch=<gpu_architecture> \
-  -Iinclude -Ithird_party/cxxopts \
-  src/main.cu src/european.cu src/asian.cu src/basket.cu src/american.cu \
-  -o option_pricer
+mkdir build && cd build
+cmake .. -DCUDA_ARCHITECTURES=80
+make -j
+```
+
+## Usage
+
+```bash
+# European Call (GPU)
+./option_pricer --type european --payoff call --method gpu \
+  --paths 1e6 --S0 100 --K 100 --r 0.05 --sigma 0.2 --T 1.0
+
+# Help
+./option_pricer --help
+```
+
+## Results
+
+See `Results.ipynb` for CPU/GPU benchmarks.
